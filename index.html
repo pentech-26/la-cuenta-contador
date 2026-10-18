@@ -256,7 +256,7 @@ function render(){
   <small class="${can?"go":"nogo"}">${can?"Ya puedes pedir la cuenta y aumentar tu mano.":"Aún no se puede pedir la cuenta a voluntad."}</small>
   <div class="items">${S.items.map(x=>x.p?`<span class="grp">(${x.l} + Premium ×2)</span>`:`<span>${x.q?"Plato quemado "+x.l:x.l}</span>`).join("")}</div>
   <small class="st">🍽️ Tapa (precio de la carta)</small><div class="chips">${TAPAS.map(c=>`<button data-t="${c}">${c}</button>`).join("")}</div>
-  <div class="row"><button id="wn" ${S.wine>=10?"disabled":""}>🍷 + Vino (${S.wine}/10)</button><button id="tc">🎂 Tarta 40 €</button><button id="pr" ${typeof S.last==="number"?"":"disabled"}>⭐ Premium ×2</button><button id="pg">💸 Propina</button><button id="qt" ${S.items.length?"":"disabled"}>🗑️ Quitar última</button></div>
+  <div class="row"><button id="wn" ${S.wine>=10?"disabled":""}>🍷 + Vino (${S.wine}/10)</button><button id="tc">🎂 Tarta 40 €</button><button id="pr" ${typeof S.last==="number"?"":"disabled"}>⭐ Premium ×2</button><button id="pg">💸 Propina</button></div>
   <small class="st">🔥 Plato quemado (resta a la cuenta)</small><div class="chips ch4">${[0,10,20,30,40,50,60,70].map(v=>`<button data-q="${-v}">${v?"−"+v:"0"}</button>`).join("")}</div>
   <button class="pri" id="pd" style="width:100%;margin-top:6px" ${S.items.length||true?"":"disabled"}>🧾 Pedir la cuenta</button></div>
   <div class="grid">${S.players.map((p,i)=>`<div class="p ${S.starter==i?"starter":""}" style="--pc:${COL[i%8]}">
@@ -269,7 +269,7 @@ function render(){
   $("#u").onclick=undo;if($("#vr"))$("#vr").onclick=showFin;if($("#kb"))$("#kb").onclick=()=>{window._gate=true;render()};$("#rs").onclick=reset;$("#oc").onclick=()=>played(1);
   document.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>addTapa(+b.dataset.t));
   document.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>quemado(+b.dataset.q));
-  $("#tc").onclick=tarta;$("#wn").onclick=addWine;$("#pr").onclick=premium;$("#pg").onclick=propina;$("#qt").onclick=quitar;$("#pd").onclick=pedir;
+  $("#tc").onclick=tarta;$("#wn").onclick=addWine;$("#pr").onclick=premium;$("#pg").onclick=propina;$("#pd").onclick=pedir;
   document.querySelectorAll("input.name").forEach(e=>e.onchange=()=>{S.players[+e.dataset.i].name=e.value.trim()||"Participante";save();render()})}
 render();
 </script></body></html>
