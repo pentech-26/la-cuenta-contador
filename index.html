@@ -132,28 +132,6 @@ function big(root){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),
   ns.forEach(n=>{const t=n.nodeValue;if(!E.test(t))return;const f=document.createDocumentFragment();
     t.split(E).forEach(p=>{if(p&&/^\p{Extended_Pictographic}/u.test(p)){const s=document.createElement("span");s.className="ic";s.textContent=p;f.appendChild(s)}else if(p)f.appendChild(document.createTextNode(p))});
     n.parentNode.replaceChild(f,n)})}
-const KEYH=5157956317376870,LK="lacuenta-lic",TK="lacuenta-trial";
-let LICOK=false,TR=null;
-const h53=(str,seed=0)=>{let h1=0xdeadbeef^seed,h2=0x41c6ce57^seed;for(let i=0,ch;i<str.length;i++){ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677)}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return 4294967296*(2097151&h2)+(h1>>>0)};
-function lic(){try{if(localStorage.getItem(LK)===String(KEYH))return true}catch(e){}return LICOK}
-function setLic(){LICOK=true;try{localStorage.setItem(LK,String(KEYH))}catch(e){}}
-function getTrial(){try{return localStorage.getItem(TK)||TR}catch(e){return TR}}
-function setTrial(v){TR=v;try{localStorage.setItem(TK,v)}catch(e){}}
-function gate(){
-  const used=getTrial()==="used",playing=!!S&&getTrial()==="active";
-  $("#app").innerHTML=`<div class="setup gate"><h1>${LG}La Cuenta</h1><p class="hint tagline">¿Quién pagará hoy?</p>
-  <div class="card2"><label for="lk">🔑 Clave de licencia</label><input id="lk" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Introduce tu clave">
-  <p id="lerr" class="err" role="alert"></p><button class="pri" id="lgo" style="width:100%">🔓 Entrar</button></div>
-  <div class="or">o</div>
-  ${playing?'<button id="lback" style="width:100%">↩️ Volver a la partida</button>':'<button id="ltry" style="width:100%">🎲 Pruébame (una partida)</button>'}
-  <p class="hint">${playing?"Con la clave podrás jugar todas las partidas que quieras.":used?"Ya has usado tu prueba gratuita. Introduce la clave para seguir jugando.":"Prueba el contador en una partida. Con la clave entras siempre."}</p></div>`;
-  big($("#app"));
-  const go=()=>{const v=$("#lk").value.trim();
-    if(h53(v)===KEYH){setLic();window._gate=false;render()}
-    else{$("#lerr").textContent="Clave incorrecta. Revísala e inténtalo de nuevo.";$("#lk").select()}};
-  $("#lgo").onclick=go;$("#lk").onkeydown=e=>{if(e.key==="Enter")go()};
-  if($("#ltry"))$("#ltry").onclick=()=>{if(used){$("#lerr").textContent="Ya has usado tu prueba gratuita. Introduce la clave para seguir.";return}setTrial("active");render()};
-  if($("#lback"))$("#lback").onclick=()=>{window._gate=false;render()}}
 const esc=t=>t.replace(/"/g,"&quot;").replace(/</g,"&lt;");
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function mut(fn){H.push(JSON.stringify(S));if(H.length>60)H.shift();fn();save();render()}
@@ -236,11 +214,10 @@ function showFin(){
   <div class="row"><button id="fv">👀 Ver partida</button><button class="pri" id="fn">🆕 Nueva partida</button></div></div>`;
   document.body.appendChild(d);big(d);
   d.querySelector("#fv").onclick=()=>d.remove();
-  d.querySelector("#fn").onclick=()=>{d.remove();if(!lic())setTrial("used");S=null;H=[];try{localStorage.removeItem(KEY)}catch(e){}render()};
+  d.querySelector("#fn").onclick=()=>{d.remove();S=null;H=[];try{localStorage.removeItem(KEY)}catch(e){}render()};
   confetti()}
-async function reset(){const r=await pick(lic()?"¿Empezar una partida nueva? Se borra la actual.":"¿Empezar una partida nueva? Se borra la actual y terminará tu prueba gratuita.",[{l:"Sí, nueva partida",v:1}]);if(r){if(!lic())setTrial("used");S=null;H=[];try{localStorage.removeItem(KEY)}catch(e){}render()}}
+async function reset(){const r=await pick("¿Empezar una partida nueva? Se borra la actual.",[{l:"Sí, nueva partida",v:1}]);if(r){S=null;H=[];try{localStorage.removeItem(KEY)}catch(e){}render()}}
 function render(){
-  if(!lic()&&(window._gate||getTrial()!=="active"))return gate();
   if(!S)return setup();
   const N=S.players.length,mx=Math.max(...S.players.map(p=>p.money));
   const win=S.players.filter(p=>p.money==mx).map(p=>p.name).join(" y "),lose=S.players.filter(p=>p.money<=0).map(p=>p.name).join(" y ");
@@ -249,7 +226,7 @@ function render(){
   const rank=S.players.map((p,i)=>({...p,i})).sort((a,b)=>b.money-a.money);
   const can=S.played>=N;
   $("#app").innerHTML=`<header><div><h1>${LG}La Cuenta</h1><div class="sub">Bar nº ${S.round}${S.starter!=null?" · empieza "+esc(S.players[S.starter].name):""}</div></div>
-  <div class="tools"><button class="sec" id="u" ${H.length?"":"disabled"}>↩️ Deshacer</button><button class="sec" id="rs">🆕 Nueva partida</button>${lic()?"":'<button class="sec" id="kb">🔑 Clave</button>'}</div></header>${endBox}
+  <div class="tools"><button class="sec" id="u" ${H.length?"":"disabled"}>↩️ Deshacer</button><button class="sec" id="rs">🆕 Nueva partida</button></div></header>${endBox}
   <div class="bill"><div class="bt"><div class="tot"><small class="tl">🧾 Cuenta del bar</small><div class="num">${eur(total())}</div></div>
   <div class="cw"><div class="cnt"><small class="cl">🃏 Cartas jugadas</small><b class="${can?"ok":""}" style="font-size:22px">${S.played}/${N}</b></div>
   <button id="oc" title="Café, baño, cambio de sentido…">🃏 Otras cartas</button><small class="hn">Café, baño, cambio de sentido…</small></div></div>
@@ -266,7 +243,7 @@ function render(){
   <section><h2>🏆 Clasificación</h2><div class="rank">${rank.map((p,k)=>`<div><span><i class="dot" style="background:${COL[p.i%8]}"></i>${["🥇","🥈","🥉"][k]||(k+1)+"."} ${esc(p.name)}</span><b class="${p.money<=0?"neg":""}">${eur(p.money)}</b></div>`).join("")}</div></section>`;
   big($("#app"));
   if(S.over){document.querySelectorAll(".bill button,.bill input").forEach(b=>b.disabled=true);if(!S.shown){S.shown=true;save();setTimeout(showFin,200)}}
-  $("#u").onclick=undo;if($("#vr"))$("#vr").onclick=showFin;if($("#kb"))$("#kb").onclick=()=>{window._gate=true;render()};$("#rs").onclick=reset;$("#oc").onclick=()=>played(1);
+  $("#u").onclick=undo;if($("#vr"))$("#vr").onclick=showFin;$("#rs").onclick=reset;$("#oc").onclick=()=>played(1);
   document.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>addTapa(+b.dataset.t));
   document.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>quemado(+b.dataset.q));
   $("#tc").onclick=tarta;$("#wn").onclick=addWine;$("#pr").onclick=premium;$("#pg").onclick=propina;$("#pd").onclick=pedir;
