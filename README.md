@@ -15,3 +15,9 @@ Al subir una versión nueva, cambia `VERSION` en `sw.js` (p. ej. `lacuenta-v3`) 
 
 ## Archivo de partidas
 Al terminar una partida se puede guardar en el archivo (en el propio dispositivo). Desde la pantalla de jugadores, «Archivo de partidas» muestra el historial (guardado solo en el dispositivo).
+
+## Idiomas
+Castellano, català, English, français y Deutsch, con los términos oficiales de las reglas de cada edición (2ª edición). La app abre en el idioma del móvil (si no es ninguno de estos, en castellano) y el botón de arriba a la izquierda permite cambiarlo; la elección se guarda en el dispositivo. Todos los textos están en el objeto `T` (y el aviso legal en `LEGAL`) dentro de `index.html`.
+
+## Modo noche
+Se activa solo con el modo oscuro del móvil o con el botón de la luna (arriba a la derecha).
