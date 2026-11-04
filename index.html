@@ -60,7 +60,8 @@ small{font-size:15px;color:var(--pencil)}
 .hn{display:block;width:0;min-width:100%;text-align:center;font-size:13px;line-height:1.2}
 .ok,.go{color:#1d7a3a;font-weight:700}
 .nogo{color:var(--red);font-weight:700}
-.go,.nogo{font-size:16px}
+.go,.nogo{display:block;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:clamp(13px,4.1vw,16px);margin-top:6px}.go .i{width:1.2em;height:1.2em;stroke:#1d7a3a;margin-right:.2em}[data-theme=dark] .go .i{stroke:#9be6a6}
+.cw{align-items:center!important;text-align:center;flex:1 1 220px}.cnt{justify-content:center}.cw #oc{width:auto;min-width:min(260px,100%);padding-left:22px;padding-right:22px}.hn{text-align:center}
 .items{display:flex;flex-wrap:nowrap;align-items:center;gap:0 14px;margin:10px 0;padding:0 14px 0 4px;height:46px;overflow-x:auto;overflow-y:hidden;white-space:nowrap;font:700 22px var(--pen);color:var(--ink2);scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-x;border-top:1.5px dashed var(--line);border-bottom:1.5px dashed var(--line)}
 .items::-webkit-scrollbar{display:none}
 .items>span{flex:none}
@@ -190,9 +191,9 @@ button,#splash,.chips,.row{-webkit-user-select:none;user-select:none;-webkit-tou
 .fsave:disabled{opacity:.75;border-style:solid;background:#e8f2e1}
 .arch{text-align:left}.arch h2{text-align:center}
 .ag{border-top:1.5px dashed var(--line);padding:6px 0}
-.ag summary{cursor:pointer;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:17px;padding:6px 0;list-style:none}
+.ag{border:0;padding:0;margin:0 0 10px}.ag summary{cursor:pointer;display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 10px;padding:10px 12px;list-style:none;border:1.5px solid var(--line);border-radius:255px 12px 225px 12px/12px 225px 12px 255px;background:rgba(255,255,255,.45)}[data-theme=dark] .ag summary{background:rgba(255,255,255,.04)}.ag[open] summary{border-style:dashed}.ag .af{font-size:14px}.ag .aw{font-size:17px;line-height:1.25;grid-column:1}.ag .aw .i{width:1.15em;height:1.15em;vertical-align:-.2em;margin-right:.2em}.ag .am{grid-column:2;grid-row:1/3;font:700 15px var(--hand);color:var(--ink);border:1.5px solid var(--ink);border-radius:20px 8px 18px 9px/9px 18px 8px 20px;padding:4px 10px;white-space:nowrap}.ag .am::after{content:" ▾"}.ag[open] .am::after{content:" ▴"}.ag[open] .am .mv{display:none}.ag:not([open]) .am .mo{display:none}.ag>.rank,.ag>.hint,.ag>.alog,.ag>.adel{margin-left:6px;margin-right:6px}
 .ag summary::-webkit-details-marker{display:none}
-.ag summary::before{content:"▸";margin-right:4px;color:var(--pencil)}.ag[open] summary::before{content:"▾"}
+
 .af{color:var(--pencil)}.aw{font-weight:700;color:var(--ink)}
 .ag .rank{box-shadow:none;background:none;transform:none;padding:0 4px}
 .alog{margin:4px 0 8px;padding-left:22px;font-size:15px;color:var(--pencil)}
@@ -297,9 +298,9 @@ function guardar(){if(!S||S.saved)return true;const mx=Math.max(...S.players.map
 function archivo(){const old=$("#arch");if(old)old.remove();const a=getA();
   const d=document.createElement("div");d.id="arch";d.className="lmod";d.setAttribute("role","dialog");d.setAttribute("aria-modal","true");
   d.innerHTML=`<div class="legal arch"><h2>${I("book")}Archivo de partidas</h2>${a.length?`<p class="hint">${a.length} partida${a.length>1?"s":""} guardada${a.length>1?"s":""} en este dispositivo.</p>`:`<p class="hint">Aún no hay partidas guardadas. Al terminar una partida, pulsa «Guardar en el archivo».</p>`}
-  ${a.map(g=>`<details class="ag"><summary><span class="af">${fecha(g.fin)}</span><span class="aw">${I("trophy")}${g.gana.map(esc).join(" y ")}</span></summary>
-    <div class="rank">${g.jugadores.map((j,k)=>`<div><span><span class="pos p${k}">${k+1}</span>${esc(j.n)}</span><b class="${j.d<=0?"neg":""}">${eur(j.d)}</b></div>`).join("")}</div>
-    ${g.log.length?`<p class="hint al">${g.bares} bares:</p><ol class="alog">${g.log.map(b=>`<li>Bar ${b.bar}: ${eur(b.total)} · ${esc(b.modo)} — ${b.pagos.map(([n,v])=>esc(n)+" "+eur(v)).join(", ")}</li>`).join("")}</ol>`:""}
+  ${a.map(g=>`<details class="ag"><summary><span class="af">${fecha(g.fin)}</span><span class="aw">${I("trophy")}${joinY(g.gana.map(esc))}</span><span class="am"><span class="mv">Ver</span><span class="mo">Ocultar</span></span></summary>
+    <p class="hint al">${g.jugadores.length} jugadores · ${g.bares} bar${g.bares==1?"":"es"}</p><div class="rank">${g.jugadores.map((j,k)=>`<div><span><span class="pos p${k}">${k+1}</span>${esc(j.n)}</span><b class="${j.d<=0?"neg":""}">${eur(j.d)}</b></div>`).join("")}</div>
+    ${g.log.length?`<p class="hint al">Bar a bar:</p><ol class="alog">${g.log.map(b=>`<li>Bar ${b.bar}: ${eur(b.total)} · ${esc(b.modo)} — ${b.pagos.map(([n,v])=>esc(n)+" "+eur(v)).join(", ")}</li>`).join("")}</ol>`:""}
     <button class="adel" data-id="${g.id}">Borrar esta partida</button></details>`).join("")}
   <div class="row"><button class="pri" id="acl">Cerrar</button></div></div>`;
   document.body.appendChild(d);big(d);document.body.style.overflow="hidden";
@@ -320,6 +321,7 @@ function big(root){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),
   ns.forEach(n=>{const t=n.nodeValue;if(!E.test(t))return;const f=document.createDocumentFragment();
     t.split(E).forEach(p=>{if(p&&/^\p{Extended_Pictographic}/u.test(p)){const s=document.createElement("span");s.className="ic";s.textContent=p;f.appendChild(s)}else if(p)f.appendChild(document.createTextNode(p))});
     n.parentNode.replaceChild(f,n)})}
+const joinY=a=>a.length>1?a.slice(0,-1).join(", ")+" y "+a[a.length-1]:a.join("");
 const esc=t=>String(t).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function mut(fn){H.push(JSON.stringify(S));if(H.length>60)H.shift();fn();save();render()}
@@ -411,7 +413,7 @@ function showFin(){
   if(!S||document.querySelector(".fin"))return;
   const rank=S.players.map((p,i)=>({...p,i})).sort((a,b)=>b.money-a.money),mx=rank[0].money;
   const nw=rank.filter(p=>p.money==mx).length,ps=rank.map(p=>rank.findIndex(q=>q.money==p.money));
-  const yy=a=>a.length>1?a.slice(0,-1).join(", ")+" y "+a[a.length-1]:a.join("");
+  const yy=joinY;
   const win=yy(rank.filter(p=>p.money==mx).map(p=>esc(p.name))),lose=yy(rank.filter(p=>p.money<=0).map(p=>esc(p.name)));
   const d=document.createElement("div");d.className="fin";
   d.innerHTML=`<div class="fcard" role="dialog" aria-modal="true"><div class="fhead"><div class="tro">${I("trophy")}</div><h2 class="ft">¡Fin de partida!</h2></div>
@@ -447,7 +449,7 @@ function render(){
   <div class="bill"><div class="drops burns">${quemas()}</div><div class="drops">${llamas()}${gotas()}</div><div class="bt"><div class="tot"><small class="tl">${I("receipt")}Cuenta del bar</small><div class="num">${eur(total())}</div></div>
   <div class="cw"><div class="cnt"><small class="cl">${I("cards")}Cartas jugadas</small><b class="${can?"ok":""}" style="font-size:22px">${S.played}/${N}</b></div>
   <button id="oc" title="Café, baño, cambio de sentido…">${I("cards")}Otras cartas</button><small class="hn">Café, baño, cambio de sentido…</small></div></div>
-  <small class="${can?"go":"nogo"}">${can?"Ya puedes pedir la cuenta y aumentar tu mano.":"Aún no se puede pedir la cuenta a voluntad."}</small>
+  <small class="${can?"go":"nogo"}">${can?I("check")+"Ya puedes pedir la cuenta · +1 mano":"Aún no puedes pedir la cuenta a voluntad"}</small>
   <div class="items" tabindex="0" aria-label="Lo apuntado en la cuenta">${lista()}</div>
   <small class="st">${I("tapa")}Tapa (precio de la carta)</small><div class="chips">${TAPAS.map(c=>`<button data-t="${c}">${c}</button>`).join("")}</div>
   <div class="row"><button id="wn" ${S.wine>=10?"disabled":""}>${I("wine")}+ Vino (${S.wine}/10)</button><button id="tc">${I("cake")}Tarta 40 €</button><button id="pr" ${typeof S.last==="number"?"":"disabled"}>${I("star")}Premium ×2</button><button id="pg">${I("coin")}Propina</button></div>
