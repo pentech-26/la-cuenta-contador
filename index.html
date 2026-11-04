@@ -6,6 +6,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#d9661f">
+<script>(function(){var t=null;try{t=localStorage.getItem("lacuenta-tema")}catch(e){}var d=t||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.dataset.theme=d;if(d=="dark")document.querySelector('meta[name=theme-color]').content="#171310"})()</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="La Cuenta">
 <style>
@@ -198,6 +199,44 @@ button,#splash,.chips,.row{-webkit-user-select:none;user-select:none;-webkit-tou
 .al{margin:6px 0 0}
 .adel{font-size:14px;min-height:36px;padding:4px 10px;color:var(--red);border-color:var(--red);background:transparent;margin:4px 0 6px}
 .arch .row{margin-top:14px}
+
+/* ===== modo noche: la pizarra del bar ===== */
+.thm{position:absolute;top:calc(env(safe-area-inset-top,0px) + 8px);right:10px;z-index:20;width:44px;height:44px;min-height:44px;padding:0;display:grid;place-items:center;border-radius:50% 45% 52% 48%/48% 55% 45% 52%;background:var(--paper)}
+.thm .i{margin:0;width:26px;height:26px}
+[data-theme=dark]{--paper:#24312b;--ink:#f1eee4;--ink2:#e8e3d3;--red:#ff8f7d;--pencil:#a8b5ad;--line:rgba(241,238,228,.28);--wine:#e58aa5;--warn:#ff8f7d;color-scheme:dark;
+--napkin:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E"),radial-gradient(ellipse 70% 40% at 25% 30%,rgba(255,255,255,.055),transparent 70%),radial-gradient(ellipse 60% 35% at 80% 75%,rgba(255,255,255,.045),transparent 70%)}
+[data-theme=dark] html,html[data-theme=dark]{background:#171310}
+[data-theme=dark] body::before{background:linear-gradient(rgba(18,12,9,.8),rgba(18,12,9,.8)),url("bg.jpg") 0 0/560px 560px repeat}
+[data-theme=dark] body{text-shadow:0 0 1px rgba(255,255,255,.25)}
+[data-theme=dark] .bill,[data-theme=dark] .p,[data-theme=dark] .rank,[data-theme=dark] .setup,[data-theme=dark] #box,[data-theme=dark] .fcard,[data-theme=dark] .end,[data-theme=dark] .legal,[data-theme=dark] #rotate .rcard{background-image:var(--napkin);background-repeat:repeat;background-size:auto;background-position:0 0;box-shadow:0 0 0 5px #5b3b22,0 0 0 7px #3c2715,0 10px 22px rgba(0,0,0,.55)}
+[data-theme=dark] .rank{box-shadow:none}
+[data-theme=dark] .fcard .rank,[data-theme=dark] .ag .rank{background:none}
+[data-theme=dark] .bill::before,[data-theme=dark] .p::after{border-color:rgba(241,238,228,.14)}
+[data-theme=dark] h1,[data-theme=dark] h2,[data-theme=dark] .name,[data-theme=dark] .mn,[data-theme=dark] #mt,[data-theme=dark] .ft,[data-theme=dark] #rotate p{color:#f6f3ea;text-shadow:0 0 2px rgba(255,255,255,.35)}
+[data-theme=dark] h1{text-shadow:2px 2px 0 rgba(0,0,0,.6)}
+[data-theme=dark] .sub{color:#ffe680;background:none;text-shadow:0 0 2px rgba(255,230,128,.4);border-bottom:2px dashed rgba(255,230,128,.5)}
+[data-theme=dark] button{background:rgba(255,255,255,.04);box-shadow:2px 3px 0 rgba(0,0,0,.4)}
+[data-theme=dark] button.pri{background:#b8352a;border-color:#ff9c8c;color:#fff8ef}
+[data-theme=dark] .tools button,[data-theme=dark] .thm{background:var(--paper)}
+[data-theme=dark] .i{stroke:var(--ink);--pf:rgba(255,255,255,.07)}
+[data-theme=dark] button.pri .i{stroke:#fff8ef}
+[data-theme=dark] .tot .num{text-shadow:0 0 3px rgba(255,143,125,.4)}
+[data-theme=dark] .ok,[data-theme=dark] .go{color:#9be6a6}
+[data-theme=dark] .fsave,[data-theme=dark] .r6 button.on,[data-theme=dark] .items span.grp,[data-theme=dark] .pos.p0,[data-theme=dark] .pos.p1,[data-theme=dark] .pos.p2,[data-theme=dark] .mano.plus .mn{color:#1b1b1b;text-shadow:none}
+[data-theme=dark] .fsave .i,[data-theme=dark] .r6 button.on .i{stroke:#1f3277;--pf:#fffef6}
+[data-theme=dark] .fsave{background:var(--hi)}[data-theme=dark] .fsave:disabled{background:#cfe3c5}
+[data-theme=dark] .items span.grp{background:linear-gradient(100deg,transparent 2%,#ffe680 4%,#ffe680 95%,transparent 98%)}
+[data-theme=dark] .items .qm{color:#ff7a4d}
+[data-theme=dark] .drop{mix-blend-mode:screen}
+[data-theme=dark] #scorch stop{stop-color:#fff!important}
+[data-theme=dark] #scorch stop:nth-child(1),[data-theme=dark] #scorch stop:nth-child(2){stop-opacity:.07}
+[data-theme=dark] #scorch stop:nth-child(3){stop-opacity:.12}[data-theme=dark] #scorch stop:nth-child(4){stop-opacity:.08}[data-theme=dark] #scorch stop:nth-child(5){stop-opacity:.04}
+[data-theme=dark] .fcard::after{background:#24312b;color:#ff8f7d;border-color:rgba(255,143,125,.8)}
+[data-theme=dark] input::placeholder{color:rgba(241,238,228,.45)}
+[data-theme=dark] #modal,[data-theme=dark] .lmod,[data-theme=dark] .fin{background:rgba(5,4,3,.7)}
+[data-theme=dark] #splash .tap{background:#fdfcf7;color:#1b1b1b;border-color:#1f3277;text-shadow:none}
+[data-theme=dark] #rotate{background:#171310}
+[data-theme=dark] .lgb{color:var(--pencil)}
 </style></head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -223,7 +262,8 @@ button,#splash,.chips,.row{-webkit-user-select:none;user-select:none;-webkit-tou
 <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.6 12.9c1.6 1.2 3 2.6 4.4 4.3 2.8-4.3 6-7.8 10.3-10.6" stroke-width="2.8"/></symbol>
 <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12.1 3.6 21.4 19.9l-18.7-.2z" fill="#ffe65a"/><path d="M12 9.7l.1 5M12 17.6v.1" stroke-width="2.4"/></symbol>
 <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5.2 21.3 5 3.3"/><path d="M5.1 4.1l12.6-.2-2.6 4.1 2.8 4.3-12.7.1" style="fill:var(--pf,#fffef6)"/><path d="M8.5 4v3.9M12 4v4M8.5 8h3.6v4" stroke-width="1.3"/></symbol>
-<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.6 12.1C5 8.1 8.2 6.1 12 6s7 2 9.4 6c-2.5 3.9-5.6 5.9-9.4 5.9-3.8.1-6.9-1.9-9.4-5.8z" style="fill:var(--pf,#fffef6)"/><path d="M12 9.5c1.4 0 2.5 1.1 2.5 2.5 0 1.5-1.1 2.6-2.5 2.6S9.5 13.5 9.5 12s1.1-2.5 2.5-2.5z" fill="#1f3277"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M15.2 3.4c-4.6.6-7.9 4.6-7.4 9.2.5 4.3 4.4 7.6 8.8 7.2 1.9-.2 3.6-1 4.9-2.3-4.4.4-8.2-2.7-8.5-7.1-.2-2.8 1-5.4 3.1-7z" style="fill:var(--pf,#fffef6)"/><path d="M5 5.5l.5 1.4 1.4.4-1.4.5L5 9.2l-.5-1.4-1.3-.5 1.3-.4zM4.2 14.5l.3.8.8.3-.8.3-.3.8-.3-.8-.8-.3.8-.3z" fill="#ffe65a" stroke-width="1.2"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><path d="M12 7.3c2.7-.1 4.8 2 4.8 4.7s-2.1 4.8-4.8 4.8S7.2 14.6 7.2 12 9.3 7.4 12 7.3z" fill="#ffe65a"/><path d="M12 2.4v2.3M12 19.4v2.2M2.5 12.1h2.2M19.3 11.9h2.2M5.2 5.3l1.6 1.6M17.3 17.2l1.5 1.6M5.3 18.8l1.5-1.6M17.2 6.8l1.6-1.5"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.6 12.1C5 8.1 8.2 6.1 12 6s7 2 9.4 6c-2.5 3.9-5.6 5.9-9.4 5.9-3.8.1-6.9-1.9-9.4-5.8z" style="fill:var(--pf,#fffef6)"/><path d="M12 9.5c1.4 0 2.5 1.1 2.5 2.5 0 1.5-1.1 2.6-2.5 2.6S9.5 13.5 9.5 12s1.1-2.5 2.5-2.5z" style="fill:var(--ink,#1f3277)"/></symbol>
 <symbol id="i-beer" viewBox="0 0 24 24"><path d="M5.3 7.3l9.3-.1-.4 12.8-8.6.1z" fill="#ffd36a"/><path d="M14.7 9.4h2.4c1.2 0 1.9.8 1.9 1.9l-.1 2.6c0 1.1-.8 1.9-1.9 1.9l-2.6.1"/><path d="M4.9 7.4c-.6-2 .6-3.4 2.4-3.2.8-1.2 2.6-1.5 3.6-.5 1.5-.7 3.3.3 3.7 1.9.3.9 0 1.5-.3 1.9" style="fill:var(--pf,#fffef6)"/></symbol>
 <symbol id="i-half" viewBox="0 0 24 24"><path d="M12 3.9c4.5 0 8 3.6 8 8.1s-3.5 8.1-8 8.1-8-3.6-7.9-8.1c0-4.5 3.4-8.1 7.9-8.1z"/><path d="M12 3.9c-4.5 0-7.9 3.6-7.9 8.1s3.4 8.1 7.9 8.1z" fill="#ffe65a"/><path d="M12 3.8l.1 16.4"/></symbol>
 <symbol id="i-pay" viewBox="0 0 24 24"><path d="M4.1 8.7c3.4.2 7.3-.4 11.6-.1l-.1 9.6-11.4.1z" fill="#cfe8c4"/><path d="M7.9 8.6c.3-2.4 2.5-4.4 5.4-4.4 3.3.1 6.1 2.4 6.4 5.6.2 2.4-.8 4.4-2.8 5.6"/><path d="M9.9 13.4c.8 0 1.4.6 1.4 1.4s-.6 1.4-1.4 1.4-1.4-.6-1.4-1.4.6-1.4 1.4-1.4z"/></symbol>
@@ -232,6 +272,7 @@ button,#splash,.chips,.row{-webkit-user-select:none;user-select:none;-webkit-tou
 <div id="rotate" aria-live="polite"><div class="rcard"><svg viewBox="0 0 64 64" aria-hidden="true"><g class="ph"><rect x="20" y="8" width="24" height="44" rx="4" fill="#fffef6"/><path d="M28 46h8"/></g><path class="ar" d="M42 4c7 0 13 4 15 11M58 9l-1 6-6-1"/></svg><p>Gira el móvil</p><small>La Cuenta se usa en vertical</small></div></div>
 <main id="app"></main>
 <div id="modal"><div id="box" role="dialog" aria-modal="true"><h2 id="mt"></h2><div id="opts"></div><button id="mc" class="sec" style="width:100%">Cancelar</button></div></div>
+<button id="thm" class="thm" type="button"></button>
 <footer class="foot"><button id="lg" class="lgb">Aviso legal · v.2.0</button></footer>
 <div id="legal" class="lmod" role="dialog" aria-modal="true" aria-labelledby="lgt" hidden><div class="legal"><h2 id="lgt">Aviso legal</h2><p class="ver"><b>La Cuenta · Contador</b> — versión v.2.0</p>
 <p><b>La Cuenta</b> es un juego de mesa de <b>2Tomatoes Games</b>, autor Litus Carreras (© 2025 2Tomatoes Games). El nombre «La Cuenta», sus reglas, ilustraciones y demás elementos del juego pertenecen a sus respectivos titulares. Más información en <a href="https://2tomatoesgames.com" target="_blank" rel="noopener">2tomatoesgames.com</a>.</p>
@@ -437,6 +478,12 @@ try{if(screen.orientation&&screen.orientation.lock&&matchMedia("(display-mode: s
 (()=>{const m=$("#legal"),o=$("#lg"),show=v=>{m.hidden=!v;document.body.style.overflow=v?"hidden":"";(v?$("#lgc"):o).focus()};
   o.onclick=()=>show(1);$("#lgc").onclick=()=>show(0);m.addEventListener("click",e=>{if(e.target===m)show(0)});
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!m.hidden)show(0)})})();
+(()=>{const b=$("#thm"),mq=matchMedia("(prefers-color-scheme: dark)"),R=document.documentElement,TK="lacuenta-tema",mt=document.querySelector("meta[name=theme-color]");
+  const paint=()=>{const d=R.dataset.theme=="dark";b.innerHTML=I(d?"sun":"moon");b.setAttribute("aria-label",d?"Cambiar a modo día":"Cambiar a modo noche");b.title=d?"Modo día":"Modo noche";mt.content=d?"#171310":"#d9661f"};
+  const set=t=>{R.dataset.theme=t;paint()};
+  b.onclick=()=>{const t=R.dataset.theme=="dark"?"light":"dark";try{(t==(mq.matches?"dark":"light"))?localStorage.removeItem(TK):localStorage.setItem(TK,t)}catch(e){}set(t)};
+  const sys=()=>{let t=null;try{t=localStorage.getItem(TK)}catch(e){}if(!t)set(mq.matches?"dark":"light")};
+  mq.addEventListener?mq.addEventListener("change",sys):mq.addListener(sys);paint()})();
 render();
 (()=>{const sp=$("#splash");let gone=0;const go=()=>{if(gone)return;gone=1;kaching();sp.classList.add("out");setTimeout(()=>sp.remove(),450)};
   sp.addEventListener("click",go);sp.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go()}});sp.focus()})();
