@@ -114,6 +114,7 @@ h2{font:400 26px var(--mark);margin:0 0 10px;color:#1b1b1b}
 .setup{max-width:480px;margin:10px auto;padding:22px 20px;background-image:var(--wring),var(--napkin);background-repeat:no-repeat,repeat,repeat,repeat;background-size:170px,auto,auto,auto;background-position:right -50px bottom -40px,0 0,0 0,0 0}
 .setup h1{text-align:center}
 .setup label{display:block;margin:14px 0 4px;font-weight:700;color:var(--ink)}
+.setup input[data-n]{font:700 var(--nf,22px)/1.15 var(--hand);padding:4px 4px 6px}
 .setup .r6{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
 .setup .r6 button{font:700 24px var(--pen)}
 .r6 button.on{background:var(--hi);border-width:3px}
@@ -469,14 +470,15 @@ function setup(){
   $("#app").innerHTML=`<div class="setup">${brand()}<p class="hint tagline">${t("tagline")}</p>
   <label>${t("players")}</label><div class="r6">${[3,4,5,6,7,8].map(k=>`<button data-k="${k}" class="${k==n?"on":""}">${k}</button>`).join("")}</div>
   <p class="hint">${t("savingsInit",eur(AH[n]))}</p>
-  ${Array.from({length:n},(_,i)=>`<label>${t("nameN",i+1)}</label><input type="text" data-n placeholder="${esc(t("playerN",i+1))}">`).join("")}
+  ${Array.from({length:n},(_,i)=>`<label>${t("nameN",i+1)}</label><input type="text" data-n placeholder="${esc(t("playerN",i+1))}" value="${esc((window._nm||[])[i]||"")}">`).join("")}
   <p><button class="pri" id="go" style="width:100%">${I("check")}${t("start")}</button></p>
   <p><button id="ar" style="width:100%">${I("book")}${t("archBtn",getA().length)}</button></p></div>`;
   big($("#app"));
-  document.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{window._n=+b.dataset.k;setup()});
+  document.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{window._nm=[...document.querySelectorAll("[data-n]")].map(e=>e.value);window._n=+b.dataset.k;setup()});
+  document.querySelectorAll("[data-n]").forEach(e=>e.oninput=fitNames);fitNames();
   $("#ar").onclick=archivo;
   $("#go").onclick=()=>{const names=[...document.querySelectorAll("[data-n]")].map((e,i)=>e.value.trim()||t("playerN",i+1));
-    S={round:1,players:names.map(x=>({name:x,money:AH[n],aum:0})),items:[],played:0,wine:0,last:null,starter:null,over:false,t0:Date.now(),log:[]};H=[];save();render()}}
+    window._nm=null;S={round:1,players:names.map(x=>({name:x,money:AH[n],aum:0})),items:[],played:0,wine:0,last:null,starter:null,over:false,t0:Date.now(),log:[]};H=[];save();render()}}
 const total=()=>S.items.reduce((a,x)=>a+x.v,0);
 function addTapa(v){mut(()=>{S.items.push({l:v+" €",v,b:v,t:1});S.played++;S.last=S.items.length-1})}
 let DNEW=-1,BNEW=-1;
@@ -503,7 +505,6 @@ async function pedir(){
   const pi=await pick(t("whoAsks"),av);if(pi==null)return;
   const mode=await pick(t("howPay"),[{h:I("pay")+t("payN"),v:"n"},{h:I("half")+t("cardM"),v:"m"},{h:I("beer")+t("cardP"),v:"p"}]);if(mode==null)return;
   const bill=Math.max(0,total());let pay=[],who=pi;const ex=[];
-  if(mode!="n"){const j=await pick(mode=="m"?t("whoM"):t("whoP"),av);if(j==null)return;who=j}
   if(mode=="n")pay=[[pi,bill]];
   if(mode=="m"){if(av.length<2){await pick(t("noPartner"),[]);return}
     const j=await pick(t("mOther"),av.filter(x=>x.v!=who));if(j==null)return;
@@ -607,11 +608,12 @@ function render(){
   $("#tc").onclick=tarta;$("#wn").onclick=addWine;$("#pr").onclick=premium;$("#pg").onclick=propina;$("#pd").onclick=pedir;
   document.querySelectorAll("input.name").forEach(e=>{e.onchange=()=>{S.players[+e.dataset.i].name=e.value.trim()||t("player");save();render()};e.oninput=fitNames});fitNames()}
 /* Nombres: todos al mismo tamaño, el mayor posible para que quepa el más largo */
-function fitNames(){const fitCv=fitNames.c||(fitNames.c=document.createElement("canvas").getContext("2d"));const ins=[...document.querySelectorAll("input.name")],g=$(".grid");if(!ins.length||!g)return;
+function fitNames(){const fitCv=fitNames.c||(fitNames.c=document.createElement("canvas").getContext("2d"));
+  [["input.name",".grid",46],["input[data-n]",".setup",40]].forEach(([q,bx,mx])=>{const ins=[...document.querySelectorAll(q)],g=$(bx);if(!ins.length||!g)return;
   const cs=getComputedStyle(ins[0]),av=ins[0].clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight)-4;if(av<=0)return;
   fitCv.font=`700 100px ${cs.fontFamily}`;
   const w=Math.max(...ins.map(e=>fitCv.measureText(e.value||e.placeholder||"").width),1);
-  g.style.setProperty("--nf",Math.max(18,Math.min(46,Math.floor(av*100/w)))+"px")}
+  g.style.setProperty("--nf",Math.max(18,Math.min(mx,Math.floor(av*100/w)))+"px")})}
 addEventListener("resize",fitNames);if(document.fonts)document.fonts.ready.then(fitNames);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#modal").classList.contains("show"))$("#mc").click()});
 if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
