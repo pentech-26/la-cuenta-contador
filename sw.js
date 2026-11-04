@@ -1,6 +1,6 @@
 // La Cuenta · service worker — modo offline
 // Sube VERSION cada vez que publiques cambios para que los móviles se actualicen.
-const VERSION = "lacuenta-v18";
+const VERSION = "lacuenta-v19";
 const SHELL = [
   "./",
   "index.html",

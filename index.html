@@ -118,16 +118,16 @@ h2{font:400 26px var(--mark);margin:0 0 10px;color:#1b1b1b}
 #box{width:100%;max-width:520px;border-radius:6px 6px 0 0;padding:18px 16px calc(16px + env(safe-area-inset-bottom,0px));max-height:85%;overflow:auto}
 #mt{font:700 22px var(--hand);color:#1b1b1b}
 #opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:12px}
-.fin{position:fixed;inset:0;background:rgba(40,15,5,.6);z-index:30;display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}
-.fcard{max-width:430px;width:100%;padding:22px 18px;text-align:center;animation:pop .45s cubic-bezier(.2,1.4,.4,1);background-image:var(--wring),var(--napkin);background-repeat:no-repeat,repeat,repeat,repeat;background-size:170px,auto,auto,auto;background-position:left -50px top -50px,0 0,0 0,0 0}
-.fcard::after{content:"CUENTA CERRADA";position:absolute;right:10px;top:16px;font:400 15px var(--mark);color:rgba(184,35,27,.75);border:3px double rgba(184,35,27,.75);padding:3px 8px;transform:rotate(12deg);border-radius:4px;pointer-events:none}
+.fin{position:fixed;inset:0;background:rgba(40,15,5,.6);z-index:30;display:flex;padding:max(22px,env(safe-area-inset-top)) 14px max(14px,env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain}
+.fcard{margin:auto;max-width:430px;width:100%;padding:18px 16px 16px;text-align:center;animation:pop .45s cubic-bezier(.2,1.4,.4,1);background-image:var(--wring),var(--napkin);background-repeat:no-repeat,repeat,repeat,repeat;background-size:170px,auto,auto,auto;background-position:left -50px top -50px,0 0,0 0,0 0}
+.fcard::after{content:"CUENTA CERRADA";position:absolute;right:-4px;top:-12px;font:400 12px var(--mark);color:rgba(184,35,27,.8);background:rgba(253,252,247,.85);border:2.5px double rgba(184,35,27,.75);padding:2px 7px;transform:rotate(9deg);border-radius:4px;pointer-events:none}
 @keyframes pop{from{transform:scale(.6) rotate(-6deg);opacity:0}to{transform:scale(1);opacity:1}}
-.fcard .tro{font-size:56px;line-height:1}.fcard .tro .ic{font-size:1em;margin:0}
-.ft{font:400 38px var(--mark);margin:6px 0 2px;color:#1b1b1b}
-.fw{font-size:26px;margin:4px 0 0}.fw b{color:var(--red)}
-.fcard .rank{text-align:left;margin:14px 0 10px;box-shadow:none;background:none;transform:none}
-.fl{font-size:17px;margin:6px 0 14px}
-.fcard .row{margin:0}
+.fhead{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px}.fcard .tro{font-size:40px;line-height:1;flex:none}.fcard .tro .ic{font-size:1em;margin:0}
+.ft{font:400 clamp(26px,8vw,32px)/1.05 var(--mark);margin:0;color:#1b1b1b}
+.fw{font-size:21px;line-height:1.25;margin:8px 0 0}.fw b{color:var(--red)}.fw small{font-size:17px;white-space:nowrap}.fe{font-size:15px;color:var(--pencil);margin:2px 0 0}
+.fcard .rank{text-align:left;margin:10px 0 6px;box-shadow:none;background:none;transform:none}.fcard .rank div{padding:4px 0;font-size:17px}.fcard .rank .pos{width:26px;height:24px;font-size:18px}.fcard .rank b{white-space:nowrap;font-size:22px;line-height:1}.fcard .rank div{line-height:1.15}.fcard .rank>div>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fl{font-size:15px;line-height:1.3;margin:4px 0 12px}
+.fcard .row{margin:8px 0 0;flex-wrap:nowrap}.fcard .row button,.fcard .fsave{min-height:44px;padding:6px 8px;white-space:nowrap;font-size:17px}.fcard .fsave{width:100%}
 .p.away .num,.p.away .dl,.p.away .mano{opacity:.45}
 .i{width:1.45em;height:1.45em;vertical-align:-.35em;margin-right:.3em;fill:none;stroke:#1f3277;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;overflow:visible}
 button .i{transform:rotate(-4deg)}
@@ -369,12 +369,14 @@ function confetti(){
 function showFin(){
   if(!S||document.querySelector(".fin"))return;
   const rank=S.players.map((p,i)=>({...p,i})).sort((a,b)=>b.money-a.money),mx=rank[0].money;
-  const win=rank.filter(p=>p.money==mx).map(p=>esc(p.name)).join(" y "),lose=rank.filter(p=>p.money<=0).map(p=>esc(p.name)).join(" y ");
+  const nw=rank.filter(p=>p.money==mx).length,ps=rank.map(p=>rank.findIndex(q=>q.money==p.money));
+  const yy=a=>a.length>1?a.slice(0,-1).join(", ")+" y "+a[a.length-1]:a.join("");
+  const win=yy(rank.filter(p=>p.money==mx).map(p=>esc(p.name))),lose=yy(rank.filter(p=>p.money<=0).map(p=>esc(p.name)));
   const d=document.createElement("div");d.className="fin";
-  d.innerHTML=`<div class="fcard" role="dialog" aria-modal="true"><div class="tro">${I("trophy")}</div><h2 class="ft">¡Fin de partida!</h2>
-  <p class="fw">Gana <b>${win}</b></p><p>con ${eur(mx)}</p>${rank.filter(p=>p.money==mx).length>1?"<p>Empate: gana quien lleve más dinero encima.</p>":""}
-  <div class="rank">${rank.map((p,k)=>`<div><span><i class="dot" style="background:${COL[p.i%8]}"></i><span class="pos p${k}">${k+1}</span>${esc(p.name)}</span><b class="${p.money<=0?"neg":""}">${eur(p.money)}</b></div>`).join("")}</div>
-  <p class="fl">${I("coin")}Se han acabado los ahorros de <b>${lose}</b></p>
+  d.innerHTML=`<div class="fcard" role="dialog" aria-modal="true"><div class="fhead"><div class="tro">${I("trophy")}</div><h2 class="ft">¡Fin de partida!</h2></div>
+  <p class="fw">${nw==1?`Gana <b>${win}</b> <small>con ${eur(mx)}</small>`:nw==2?`Empatan <b>${win}</b> <small>con ${eur(mx)}</small>`:`¡Empate a <b>${nw}</b>! <small>con ${eur(mx)} cada uno</small>`}</p>${rank.filter(p=>p.money==mx).length>1?"<p class=\"fe\">Desempate: gana quien lleve más dinero encima.</p>":""}
+  <div class="rank">${rank.map((p,k)=>`<div><span><i class="dot" style="background:${COL[p.i%8]}"></i><span class="pos p${ps[k]}">${ps[k]+1}</span>${esc(p.name)}</span><b class="${p.money<=0?"neg":""}">${eur(p.money)}</b></div>`).join("")}</div>
+  <p class="fl">${I("coin")}Sin ahorros: <b>${lose}</b></p>
   <button id="fs" class="fsave" ${S.saved?"disabled":""}>${I("book")}${S.saved?"Guardada en el archivo":"Guardar en el archivo"}</button>
   <div class="row"><button id="fv">${I("eye")}Ver partida</button><button class="pri" id="fn">${I("new")}Nueva partida</button></div></div>`;
   document.body.appendChild(d);big(d);
