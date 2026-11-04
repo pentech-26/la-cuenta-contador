@@ -1,6 +1,6 @@
 // La Cuenta · service worker — modo offline
 // Sube VERSION cada vez que publiques cambios para que los móviles se actualicen.
-const VERSION = "lacuenta-v24";
+const VERSION = "lacuenta-v25";
 const SHELL = [
   "./",
   "index.html",
@@ -8,7 +8,11 @@ const SHELL = [
   "bg.jpg",
   "icon-192.png",
   "icon-512.png",
+  "icon-maskable-192.png",
+  "icon-maskable-512.png",
   "apple-touch-icon.png",
+  "favicon.ico",
+  "favicon-32.png",
   "splash.jpg",
   "ka-ching.mp3",
   "fonts/kalam-latin-400-normal.woff2",
