@@ -632,7 +632,7 @@ function render(){
   <small class="${can?"go":"nogo"}">${can?I("check")+t("canY"):t("canN")}</small>
   <div class="items" tabindex="0" aria-label="${t("itemsA")}" data-empty="${t("empty")}">${lista()}</div>
   <small class="st">${I("tapa")}${t("tapaT")}</small><div class="chips">${TAPAS.map(c=>`<button data-t="${c}">${c}</button>`).join("")}</div>
-  <div class="row"><button id="wn" ${S.wine>=10?"disabled":""}>${I("wine")}${t("wineB",S.wine)}</button><button id="tc">${I("cake")}${t("cakeB")}</button><button id="pr" ${typeof S.last==="number"?"":"disabled"}>${I("star")}${t("premB")}</button><button id="pg">${I("coin")}${t("tipB")}</button></div>
+  <div class="row"><button id="wn" ${S.wine>=10?"disabled":""}>${I("wine")}${t("wineB",S.wine)}</button><button id="tc" ${S.items.some(x=>x.c)?"disabled":""}>${I("cake")}${t("cakeB")}</button><button id="pr" ${typeof S.last==="number"?"":"disabled"}>${I("star")}${t("premB")}</button><button id="pg">${I("coin")}${t("tipB")}</button></div>
   <small class="st">${I("fire")}${t("burntT")}</small><div class="chips ch4">${[0,10,20,30,40,50,60,70].map(v=>`<button data-q="${-v}">${v?"−"+v:"0"}</button>`).join("")}</div>
   <button class="pri" id="pd" style="width:100%;margin-top:6px">${I("receipt")}${t("ask")}</button></div>
   <div class="grid">${S.players.map((p,i)=>`<div class="p ${S.starter==i?"starter":""} ${p.wc||p.bd?"away":""} ${p.bd?"bd":""}" style="--pc:${COL[i%8]}">
